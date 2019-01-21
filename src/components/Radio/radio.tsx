@@ -28,11 +28,12 @@ const Menu = styled.ul`
   width: 100%;
 `;
 const Label = styled.label`
+  margin: 0 10px;
   position: relative;
   padding-left: 35px;
   margin-bottom: 12px;
   cursor: pointer;
-  font-size: 22px;
+  font-size: 18px;
   user-select: none;
 
   &:hover input ~ span {
@@ -40,7 +41,7 @@ const Label = styled.label`
   }
   & input:checked ~ span {
     background-color: white;
-    border:1px solid #02467d;
+    border: 1px solid #02467d;
   }
 `;
 const Input = styled.input`
@@ -51,7 +52,6 @@ const Input = styled.input`
   &:checked ~ span:after {
     display: block;
   }
-
 `;
 
 const Checkmark = styled.span`
@@ -66,40 +66,46 @@ const Checkmark = styled.span`
     content: "";
     position: absolute;
     display: none;
-    top:50%;
-    left:50%;
-    transform:translateY(-50%) translateX(-50%);
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    background:#02467d;
+    background: #02467d;
   }
 `;
 
-interface IProps{
-  values:string[]
+interface IProps {
+  onChange?: () => void;
+  value: string;
+  rootValue?: string;
 }
-export default class Radio extends Component<any, any> {
-  public state={
-    value:''
-  }
-  public handleCheck=(e)=>{
-    this.setState({
-      value:e.target.value
-    })
-  }
+export default class Radio extends Component<IProps, any> {
+
+
   render() {
+    const { children, value, rootValue } = this.props;
+    const checked = value === rootValue;
     return (
-      <div>
-        <Label>
-          <Input type="radio" name="radio" value="first" onChange={this.handleCheck} />
-          <Checkmark />
-        </Label>
-        <Label>
-          <Input type="radio" name="radio" value="second" onChange={this.handleCheck}/>
-          <Checkmark />
-        </Label>
-      </div>
+      <Label>
+        <Input
+          type="radio"
+          name="radio"
+          value={this.props.value}
+          onChange={this.props.onChange}
+        />
+        <Checkmark />
+        Free event
+        <div
+          style={{
+            display: "inline-block",
+            visibility: checked ? "visible" : "hidden"
+          }}
+        >
+          {children}
+        </div>
+      </Label>
     );
   }
 }

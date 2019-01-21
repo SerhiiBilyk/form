@@ -4,6 +4,7 @@ import { media, inputs } from "../../styles/utils";
 
 const Wrapper = styled.input`
   ${inputs}
+  ${(props: { css: string }) => props.css}
   ${media.phone`width:100%`}
 `;
 
@@ -13,6 +14,7 @@ export default class Input extends Component<any, any> {
     console.log("value", value);
   };
   render() {
-    return <Wrapper onChange={this.handleChange} />;
+    const { css } = this.props;
+    return <Wrapper css={css} onChange={this.handleChange} />;
   }
 }

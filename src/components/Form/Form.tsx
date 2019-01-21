@@ -6,7 +6,7 @@ import Textarea from "../Textarea";
 import { initial, getTitleDublicates } from "../../actions";
 import { connect } from "react-redux";
 import Select from "../Select";
-import Radio from '../Radio'
+import { Radio, RadioGroup } from "../Radio";
 
 const Wrapper = styled.input`
   width: 80%;
@@ -21,7 +21,7 @@ const Row = styled.div`
 `;
 const RowTitle = styled.div`
   flex-basis: 30%;
-  padding-top:5px;
+  padding-top: 5px;
   ${media.phone`flex-basis:100%`}
 `;
 
@@ -41,18 +41,26 @@ const RowMessage = styled.div`
   ${media.phone`flex-basis:100%`}
 `;
 const InputWidth = styled.div`
-width:90%;
+  width: 90%;
 `;
 
-
 class Form extends Component<any, any> {
+  public state = {
+    radio: "first"
+  };
+  public handleRadioGroup = e => {
+    console.log("TARET value", e.target.value);
+    this.setState({
+      radio: e.target.value
+    });
+  };
   public static Row = ({ title, children }) => {
     return (
       <Row>
-        <RowTitle>
-          {title.toUpperCase()}
-        </RowTitle>
-        <RowInput><InputWidth>{children}</InputWidth></RowInput>
+        <RowTitle>{title.toUpperCase()}</RowTitle>
+        <RowInput>
+          <InputWidth>{children}</InputWidth>
+        </RowInput>
         <RowMessage>
           <VerticalAlign>Error</VerticalAlign>
         </RowMessage>
@@ -67,6 +75,7 @@ class Form extends Component<any, any> {
 
   render() {
     console.log("Form", this.props);
+    const { radio } = this.state;
     return (
       <div>
         <Form.Row title="title">
@@ -79,7 +88,12 @@ class Form extends Component<any, any> {
           <Select />
         </Form.Row>
         <Form.Row title="payment">
-          <Radio />
+          <RadioGroup value={radio} onChange={this.handleRadioGroup}>
+            <Radio value="free" />
+            <Radio value="paid">
+              <Input css={"width:50px;"} />
+            </Radio>
+          </RadioGroup>
         </Form.Row>
       </div>
     );

@@ -37,7 +37,7 @@ export const clearfix = `
 `;
 
 export const inputs = `
-width:100%;
+  width:100%;
   font-size: 18px;
 
 `;
