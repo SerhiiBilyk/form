@@ -1,6 +1,6 @@
-import { INITIAL_ACTION } from "../actions";
+import { Constants } from "../actions";
 import { IValidatorStore } from "../types";
-
+const { INITIAL_ACTION } = Constants;
 const initialState = {
   filters: []
 };

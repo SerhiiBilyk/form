@@ -5,7 +5,7 @@ import Routes from "./routes";
 
 import { ConnectedRouter } from "connected-react-router";
 import configureStore, { history } from "./store";
-
+import "./styles/reset.css";
 const store = configureStore({});
 
 ReactDOM.render(

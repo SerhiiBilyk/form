@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router";
 import App from "./app";
 import Sub from "./sub";
 
-export default class Router extends Component {
+export default class Router extends Component<any,any> {
   public render() {
     console.log("render");
     return (
