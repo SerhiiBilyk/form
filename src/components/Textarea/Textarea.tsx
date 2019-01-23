@@ -18,20 +18,23 @@ font-size:13px;
 
 export default class TextArea extends Component<any, any> {
   public state = {
-    length: 0
+    length: 0,
+    value: ""
   };
   handleChange = element => {
     const { value } = element.target;
-    console.log("value", value);
+
     this.setState({
-      length: value.length
+      length: value.length,
+      value
     });
   };
   render() {
-    const { length } = this.state;
+    const { length, value } = this.state;
+    console.log("props", this.props);
     return (
       <>
-        <Wrapper onChange={this.handleChange} rows={4} />
+        <Wrapper onChange={this.handleChange} value={value} {...this.props} />
         <p>
           <TextBlock align="left">Max length: 140 chars</TextBlock>
           <TextBlock align="right">0/{140 - length}</TextBlock>

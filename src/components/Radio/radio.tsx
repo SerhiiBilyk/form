@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { media, inputs } from "../../styles/utils";
+import { media, inputs, clearfix } from "../../styles/utils";
 
 const Container = styled.div`
   position: relative;
@@ -28,10 +28,8 @@ const Menu = styled.ul`
   width: 100%;
 `;
 const Label = styled.label`
-  margin: 0 10px;
   position: relative;
-  padding-left: 35px;
-  margin-bottom: 12px;
+  display: inline-block;
   cursor: pointer;
   font-size: 18px;
   user-select: none;
@@ -55,9 +53,8 @@ const Input = styled.input`
 `;
 
 const Checkmark = styled.span`
-  position: absolute;
-  top: 0;
-  left: 0;
+  display: inline-block;
+  position: relative;
   height: 25px;
   width: 25px;
   background-color: #eee;
@@ -66,45 +63,37 @@ const Checkmark = styled.span`
     content: "";
     position: absolute;
     display: none;
-    top: 50%;
-    left: 50%;
-    transform: translateY(-50%) translateX(-50%);
+    left: 4px;
+    top: 4px;
     width: 15px;
     height: 15px;
     border-radius: 50%;
     background: #02467d;
   }
 `;
-
+const Text = styled.p`
+  display: inline-block;
+  vertical-align: top;
+  line-height: 25px;
+  margin: 0 10px;
+`;
+const ClearFix = styled.div`
+  ${clearfix}
+`;
 interface IProps {
   onChange?: () => void;
   value: string;
-  rootValue?: string;
+  text: string;
 }
 export default class Radio extends Component<IProps, any> {
-
-
   render() {
-    const { children, value, rootValue } = this.props;
-    const checked = value === rootValue;
+    const { onChange, value, text } = this.props;
     return (
       <Label>
-        <Input
-          type="radio"
-          name="radio"
-          value={this.props.value}
-          onChange={this.props.onChange}
-        />
+        <Input type="radio" name="radio" value={value} onChange={onChange} />
+
         <Checkmark />
-        Free event
-        <div
-          style={{
-            display: "inline-block",
-            visibility: checked ? "visible" : "hidden"
-          }}
-        >
-          {children}
-        </div>
+        <Text>{text}</Text>
       </Label>
     );
   }

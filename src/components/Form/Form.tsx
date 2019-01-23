@@ -7,7 +7,7 @@ import { initial, getTitleDublicates } from "../../actions";
 import { connect } from "react-redux";
 import Select from "../Select";
 import { Radio, RadioGroup } from "../Radio";
-
+import CoreContext, { context } from "../../context";
 const Wrapper = styled.input`
   width: 80%;
   font-size: 18px;
@@ -38,18 +38,20 @@ const RowInput = styled.div`
 `;
 const RowMessage = styled.div`
   flex-basis: 20%;
+  padding-left:20px;
   ${media.phone`flex-basis:100%`}
 `;
 const InputWidth = styled.div`
-  width: 90%;
+  width: 100%;
 `;
 
 class Form extends Component<any, any> {
+  public static contextType = CoreContext;
+
   public state = {
     radio: "first"
   };
   public handleRadioGroup = e => {
-    console.log("TARET value", e.target.value);
     this.setState({
       radio: e.target.value
     });
@@ -68,32 +70,33 @@ class Form extends Component<any, any> {
     );
   };
   componentDidMount() {
-    this.props.getTitleDublicates().then(dublicate => {
-      console.log("res", dublicate);
-    });
+    this.props.getTitleDublicates().then(dublicate => {});
   }
 
   render() {
-    console.log("Form", this.props);
     const { radio } = this.state;
+    const inputCss = `width:50px; vertical-align:top`;
+    console.log(this.context)
     return (
       <div>
         <Form.Row title="title">
           <Input />
         </Form.Row>
         <Form.Row title="description">
-          <Textarea />
+          <Textarea maxLength={140} rows={4} />
         </Form.Row>
         <Form.Row title="category">
           <Select />
         </Form.Row>
         <Form.Row title="payment">
           <RadioGroup value={radio} onChange={this.handleRadioGroup}>
-            <Radio value="free" />
-            <Radio value="paid">
-              <Input css={"width:50px;"} />
-            </Radio>
+            <Radio value="free" text="Free event" />
+            <Radio value="paid" text="Free event" />
+            {radio === "paid" ? <Input css={inputCss} /> : null}
           </RadioGroup>
+        </Form.Row>
+        <Form.Row title="reward">
+          <Input />
         </Form.Row>
       </div>
     );
