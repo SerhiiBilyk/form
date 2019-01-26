@@ -1,19 +1,28 @@
 import React, { Component } from "react";
 import {
   Paper,
-  Form,
+  FormRow,
   Input,
   Textarea,
   Menu,
   MenuItem,
   Radio,
-  Group
+  Group,
+  FormInput
 } from "@components";
 import CoreContext, { context } from "../context";
 import { getRequest } from "@actions";
 import { connect } from "react-redux";
+import { Validators } from "@utils";
 
-export default class About extends Component<any, any> {
+//
+interface IProps {
+  categories: any[];
+  titles: any[];
+  fetchData: (name: string) => void;
+  handleEventData: (name: string, value: any) => void;
+}
+export default class About extends Component<IProps, any> {
   static contextType = CoreContext;
   public context!: React.ContextType<typeof CoreContext>;
 
@@ -24,54 +33,74 @@ export default class About extends Component<any, any> {
     this.props.fetchData("categories");
     this.props.fetchData("titles");
   }
-  public handleRadioGroup = e => {
+  public handleRadioGroup = value => {
     this.setState({
-      radio: e.target.value
+      radio: value
     });
   };
   public handleSelect = item => {};
+
   render() {
     const { radio } = this.state;
     const { categories } = this.props;
-    const inputCss = `width:50px; vertical-align:top`;
+    const inputCss = `width:50px;`;
     return (
       <Paper header="About">
-        <Form>
-          <>
-            <Form.Row title="title">
-              <Input
-                isValidated
-                validator={value =>
-                  !this.props.titles.some(elem => elem.title === value)
-                }
-              />
-            </Form.Row>
-            <Form.Row title="description">
-              <Textarea maxLength={140} rows={4} />
-            </Form.Row>
-            <Form.Row title="category">
-              <Menu itemRender={item => (item ? `${item.name}` : "")}>
-                {categories.map(item => (
-                  <MenuItem
-                    key={item.id}
-                    item={item}
-                    onClick={this.handleSelect}
+        <>
+          <FormInput
+            controls={{
+              title: [
+                Validators.dublicates(this.props.titles),
+                Validators.required
+              ]
+            }}
+            render={(inputState, handleInputControl) => {
+              console.log("inputState", inputState);
+              const { message, valid } = inputState["title"];
+              console.log('valid',valid)
+              return (
+                <FormRow title="title" required message={message}>
+                  <Input
+                    name="title"
+                    onChange={handleInputControl}
+                    valid={valid}
                   />
-                ))}
-              </Menu>
-            </Form.Row>
-            <Form.Row title="payment">
-              <Group value={radio} onChange={this.handleRadioGroup}>
-                <Radio value="free" text="Free event" />
-                <Radio value="paid" text="Free event" />
-                {radio === "paid" ? <Input css={inputCss} /> : null}
-              </Group>
-            </Form.Row>
-            <Form.Row title="reward">
-              <Input />
-            </Form.Row>
-          </>
-        </Form>
+                </FormRow>
+              );
+            }}
+          />
+
+          <FormRow title="description" required>
+            <Textarea maxLength={140} rows={4} />
+          </FormRow>
+          <FormRow title="category">
+            <Menu itemRender={item => (item ? `${item.name}` : "")}>
+              {categories.map(item => (
+                <MenuItem
+                  key={item.id}
+                  item={item}
+                  onClick={this.handleSelect}
+                />
+              ))}
+            </Menu>
+          </FormRow>
+          <FormRow title="payment">
+            <Group onChange={this.handleRadioGroup} name="payment">
+              <Radio value="free" text="Free event" />
+              <Radio value="paid" text="Paid event" />
+            </Group>
+            <Input
+              css={`
+                ${inputCss} ${radio === "paid"
+                  ? "visibility:visible"
+                  : "visibility:hidden"}
+              `}
+            />
+          </FormRow>
+          <FormRow title="reward">
+            <Input />
+          </FormRow>
+        </>
       </Paper>
     );
   }

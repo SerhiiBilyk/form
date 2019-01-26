@@ -3,12 +3,12 @@ import styled from "styled-components";
 import { FlexContainer } from "@components/styled/FlexBox";
 
 const Label = styled.label`
-position:relative;
+  position: relative;
   cursor: pointer;
   font-size: 18px;
   user-select: none;
-  white-space:nowrap;
-
+  white-space: nowrap;
+  ${(props: { css: string }) => props.css}
 
   &:hover input ~ span {
     background-color: #ccc;
@@ -30,7 +30,7 @@ const Input = styled.input`
 
 const Checkmark = styled.span`
   display: inline-block;
-  vertical-align:middle;
+  vertical-align: middle;
   position: relative;
   height: 25px;
   width: 25px;
@@ -55,19 +55,29 @@ const Text = styled.p`
 `;
 
 interface IProps {
-  onChange?: () => void;
+  onChange?: (value) => void;
   value: string;
   text: string;
+  css?: string;
+  name?:string;
 }
 export default class Radio extends Component<IProps, any> {
+  public handleChange = e => {
+    this.props.onChange(e.target.value);
+  };
+
   render() {
-    const { onChange, value, text } = this.props;
+    const { value, name, text, css = "" } = this.props;
     return (
-      <Label>
-   
-          <Input type="radio" name="radio" value={value} onChange={onChange} />
-          <Checkmark />
-          <Text>{text}</Text>
+      <Label css={css}>
+        <Input
+          type="radio"
+          name={name}
+          value={value}
+          onChange={this.handleChange}
+        />
+        <Checkmark />
+        <Text>{text}</Text>
       </Label>
     );
   }

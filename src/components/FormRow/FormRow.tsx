@@ -7,11 +7,14 @@ const Row = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
-  align-items:center;
-  ${media.phone`  flex-direction:column; align-items:stretch`}
+  ${media.phone`flex-direction:column; align-items:stretch`}
 `;
 const RowTitle = styled.div`
   flex-basis: 30%;
+  &::after {
+    content:'${(props: { required: boolean }) => (props.required ? "*" : "")}';
+    color:red;
+  }
   ${media.phone`flex-basis:100%`}
 `;
 
@@ -31,27 +34,21 @@ const RowMessage = styled.div`
 `;
 const InputWidth = styled.div`
   width: 100%;
-
-
 `;
 
-export default class Form extends Component<any, any> {
-
-  public static Row = ({ title, children }) => {
+export default class FormRow extends Component<any, any> {
+  render() {
+    const { title, children, required, message } = this.props;
     return (
       <Row>
-        <RowTitle>{title.toUpperCase()}</RowTitle>
+        <RowTitle required={required}>{title.toUpperCase()}</RowTitle>
         <RowInput>
           <InputWidth>{children}</InputWidth>
         </RowInput>
         <RowMessage>
-          <VerticalAlign>Error</VerticalAlign>
+          <VerticalAlign>{message}</VerticalAlign>
         </RowMessage>
       </Row>
     );
-  };
-
-  render() {
-    return this.props.children;
   }
 }
