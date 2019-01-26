@@ -31,7 +31,6 @@ export default class TextArea extends Component<any, any> {
   };
   render() {
     const { length, value } = this.state;
-    console.log("props", this.props);
     return (
       <>
         <Wrapper onChange={this.handleChange} value={value} {...this.props} />

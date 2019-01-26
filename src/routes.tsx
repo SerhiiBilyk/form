@@ -5,7 +5,6 @@ import Sub from "./sub";
 
 export default class Router extends Component<any,any> {
   public render() {
-    console.log("render");
     return (
       <Switch>
         <Route exact path="/" component={App} />

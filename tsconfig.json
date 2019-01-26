@@ -9,5 +9,16 @@
     "baseUrl": "./",
     "esModuleInterop": true,
     "experimentalDecorators": true,
+
+    "paths": {
+      "@api": ["src/api/*"],
+      "@components/*": ["src/components/*"],
+      "@styles/*": ["src/styles/*"],
+      "@components/styled/*":["src/components/StyledComponents/*"],
+      "@reducers/*": ["src/reducers/*"],
+      "@types/*": ["src/types/*"],
+      "@utils": ["src/utils/*"],
+      "@actions": ["src/actions/*"]
     }
+  }
 }

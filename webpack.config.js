@@ -71,7 +71,7 @@ module.exports = () => {
           use: [
             'style-loader',
             'css-loader',
-          ],  
+          ],
         },
         {
           test: /\.(html)$/,
@@ -84,6 +84,13 @@ module.exports = () => {
     },
     resolve: {
       alias: {
+        '@api': path.resolve(__dirname, `${APP_DIR}/api`),
+        '@actions': path.resolve(__dirname, `${APP_DIR}/actions`),
+        '@components': path.resolve(__dirname, `${APP_DIR}/components`),
+        '@reducers': path.resolve(__dirname, `${APP_DIR}/reducers`),
+        '@types': path.resolve(__dirname, `${APP_DIR}/types`),
+        '@utils': path.resolve(__dirname, `${APP_DIR}/utils`),
+        '@styles': path.resolve(__dirname, `${APP_DIR}/styles`)
 
       },
       extensions: ['.js', '.html', '.tsx', '.ts', 'd.ts'],

@@ -1,9 +1,14 @@
-export interface IValidatorStore {
-  filters: string[];
-}
+
 interface ICoordinator {
   email: string;
   id: string;
+}
+
+export interface IApiData {
+  data: any;
+  loaded: boolean;
+  selected: any;
+  error: boolean;
 }
 export interface IEvent {
   title: string;

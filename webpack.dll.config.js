@@ -1,7 +1,6 @@
 const path = require("path");
 const DLL_DIR = path.resolve(__dirname, "./dll");
 const webpack = require("webpack");
-console.log('dll')
 module.exports = {
   entry: {
     vendor: [

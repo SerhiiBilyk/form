@@ -1,38 +1,14 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { media, inputs, clearfix } from "../../styles/utils";
+import { FlexContainer } from "@components/styled/FlexBox";
 
-const Container = styled.div`
-  position: relative;
-`;
-
-const Arrow = styled.div`
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 6px solid black;
-  top: 50%;
-  position: absolute;
-  transform: translateY(-50%);
-  right: 4px;
-`;
-const Wrapper = styled.input`
-  ${inputs}
-  color:transparent;
-  ${media.phone`width:100%`}
-`;
-const Menu = styled.ul`
-  position: absolute;
-  background-color: rgba(200, 203, 208, 0.6);
-  width: 100%;
-`;
 const Label = styled.label`
-  position: relative;
-  display: inline-block;
+position:relative;
   cursor: pointer;
   font-size: 18px;
   user-select: none;
+  white-space:nowrap;
+
 
   &:hover input ~ span {
     background-color: #ccc;
@@ -54,6 +30,7 @@ const Input = styled.input`
 
 const Checkmark = styled.span`
   display: inline-block;
+  vertical-align:middle;
   position: relative;
   height: 25px;
   width: 25px;
@@ -73,13 +50,10 @@ const Checkmark = styled.span`
 `;
 const Text = styled.p`
   display: inline-block;
-  vertical-align: top;
   line-height: 25px;
   margin: 0 10px;
 `;
-const ClearFix = styled.div`
-  ${clearfix}
-`;
+
 interface IProps {
   onChange?: () => void;
   value: string;
@@ -90,11 +64,12 @@ export default class Radio extends Component<IProps, any> {
     const { onChange, value, text } = this.props;
     return (
       <Label>
-        <Input type="radio" name="radio" value={value} onChange={onChange} />
-
-        <Checkmark />
-        <Text>{text}</Text>
+   
+          <Input type="radio" name="radio" value={value} onChange={onChange} />
+          <Checkmark />
+          <Text>{text}</Text>
       </Label>
     );
   }
 }
+//        <FlexContainer direction="row">
