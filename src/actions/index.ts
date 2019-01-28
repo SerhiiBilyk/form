@@ -1,12 +1,15 @@
 import { Action, ActionCreator, AnyAction, Dispatch, Store } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { requests } from "@api";
+import { IFormData } from "@types";
 
 export enum Constants {
   INITIAL_ACTION = "INITIAL_ACTION",
   GET_TITLE_DUBLICATES = "GET_TITLE_DUBLICATES",
   GET_REQUEST_SUCCESS = "GET_REQUEST_SUCCESS",
-  GET_REQUEST_ERROR = "GET_REQUEST_ERROR"
+  GET_REQUEST_ERROR = "GET_REQUEST_ERROR",
+
+  FORM_SET_VALUE = "FORM_SET_VALUE"
 }
 
 interface IState {
@@ -43,46 +46,47 @@ type GetTitleDublicatesAction = Action<Constants.GET_TITLE_DUBLICATES> & {
 };
 type Dublicates = (title: string) => ActionFactory<GetTitleDublicatesAction>;
 
-export const getRequest = (name: string) => {
-  return dispatch => {
-    return requests[name]().then(response => {
-      const { status } = response;
-      const loaded = status === 200;
-      if (loaded) {
-        return response.json().then(data => {
-          dispatch({
-            type: Constants.GET_REQUEST_SUCCESS,
-            payload: {
-              name,
-              data,
-              status
-            }
-          });
-        });
-      } else {
-        dispatch({
-          type: Constants.GET_REQUEST_ERROR,
-          payload: {
-            name,
-            status
-          }
-        });
-      }
-    });
+type GetRequestAction = Action<Constants.GET_REQUEST_SUCCESS> & {
+  payload: {
+    name: string;
   };
 };
-/*
-export const getTitleDublicates: Dublicates = (title: string) => {
-  return dispatch => {
-    return handleTitleDublicates().then(response => {
-      return response.json().then(dublicates => {
-        dispatch({
-          type: Constants.GET_TITLE_DUBLICATES,
-          payload: { dublicates }
-        });
-        return dublicates.some(elem => elem.title === title);
+type GetRequest = (name: string) => ActionFactory<GetRequestAction>;
+
+export const getRequest: GetRequest = (name: string) => dispatch =>
+  requests[name]().then(response => {
+    const { status } = response;
+    return response.json().then(data => {
+      dispatch({
+        type: Constants.GET_REQUEST_SUCCESS,
+        payload: {
+          name,
+          data,
+          status
+        }
       });
     });
+  });
+
+type FormSetValueAction = Action<Constants.FORM_SET_VALUE> & {
+  payload: {
+    name: string;
+    data: IFormData;
   };
 };
-*/
+type FormSetValue = (
+  name: string,
+  data: IFormData
+) => ActionFactory<FormSetValueAction>;
+
+export const formSetValue: FormSetValue = (
+  name: string,
+  data: IFormData
+) => dispatch =>
+  dispatch({
+    type: Constants.FORM_SET_VALUE,
+    payload: {
+      name,
+      data
+    }
+  });

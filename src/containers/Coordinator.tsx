@@ -1,53 +1,88 @@
 import React, { Component } from "react";
-import { Paper, FormRow, Input, Menu, MenuItem } from "@components";
+import {
+  Paper,
+  FormRow,
+  Input,
+  Menu,
+  MenuItem,
+  FormControl
+} from "@components";
 import CoreContext from "../context";
+import { connect } from "react-redux";
+import { getRequest } from "@actions";
+import { IFormData } from "@types";
+import { Validators } from "@utils";
 
-/**
- *     responsible={responsible}
-          fetchData={this.fetchData}
-          handleEventData={this.handleEventData}
- */
 interface IProps {
   responsible: any[];
-  fetchData: (name: string) => void;
-  handleEventData: (name: string, value: any) => void;
+  getRequest: (name: string) => void;
+  form: Record<string, IFormData>;
 }
-export default class Coordinator extends Component<IProps, any> {
+class Coordinator extends Component<IProps, any> {
   static contextType = CoreContext;
   public context!: React.ContextType<typeof CoreContext>;
 
   public state = {};
   componentDidMount() {
-    this.props.fetchData("responsible");
+    this.props.getRequest("responsible");
   }
 
   public handleSelect = item => {};
   render() {
-    const { responsible } = this.props;
+    const { responsible, form } = this.props;
+    const { coordinator_email } = form;
     const { user } = this.context;
+    console.log("responsible", responsible);
     return (
       <Paper header="Coordinator">
         <FormRow title="responsible" required>
-          <Menu
-            itemDefault={user}
-            itemRender={item => `${item.name} ${item.lastname}`}
-          >
-            {responsible.map(item => (
-              <MenuItem key={item.id} item={item} onClick={this.handleSelect} />
-            ))}
-          </Menu>
+          <FormControl
+            name="coordinator_id"
+            render={handleInputControl => (
+              <Menu
+                data={responsible}
+                default={user.id}
+                render={elem => (elem ? `${elem.name} ${elem.lastname}` : "")}
+              >
+                {responsible.map(item => (
+                  <MenuItem
+                    key={item.id}
+                    item={item}
+                    onClick={selected => handleInputControl(selected.id)}
+                  />
+                ))}
+              </Menu>
+            )}
+          />
         </FormRow>
-        <FormRow title="email">
-          <Input
-            type="email"
-            isValidated
-            validator={value => {
-              var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-              return re.test(value.toString().toLowerCase());
-            }}
+
+        <FormRow title="email" message={coordinator_email.message}>
+          <FormControl
+            name="coordinator_email"
+            validators={[Validators.isEmail]}
+            render={handleInputControl => (
+              <Input onChange={handleInputControl} {...coordinator_email} />
+            )}
           />
         </FormRow>
       </Paper>
     );
   }
 }
+
+const mapStateToProps = state => {
+  const {
+    validatorReducer: { responsible },
+    formReducer
+  } = state;
+  return {
+    responsible: responsible.data,
+    form: formReducer
+  };
+};
+export default connect(
+  mapStateToProps,
+  {
+    getRequest
+  }
+)(Coordinator);

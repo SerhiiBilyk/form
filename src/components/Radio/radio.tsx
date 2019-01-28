@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { FlexContainer } from "@components/styled/FlexBox";
 
 const Label = styled.label`
   position: relative;
@@ -82,4 +81,3 @@ export default class Radio extends Component<IProps, any> {
     );
   }
 }
-//        <FlexContainer direction="row">

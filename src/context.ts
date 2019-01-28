@@ -8,6 +8,7 @@ interface IUser {
 }
 export interface IContext {
   user: IUser;
+
 }
 
 export const context: IContext = {

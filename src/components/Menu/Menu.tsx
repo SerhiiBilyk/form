@@ -1,6 +1,6 @@
-import React, { Component} from "react";
+import React, { Component, ReactNode } from "react";
 import styled from "styled-components";
-import { media} from "../../styles/utils";
+import { media } from "../../styles/utils";
 import Group from "../Group";
 const Container = styled.div`
   position: relative;
@@ -23,33 +23,45 @@ const SelectedItem = styled.div`
   padding: 5px 10px;
   font-size: 18px;
   cursor: pointer;
-  min-height:30px;
+  min-height: 30px;
   ${media.phone`width:100%`}
 `;
 const MenuWrapper = styled.ul`
   position: absolute;
-  top:-20px;
-  left:20px;
+  top: -20px;
+  left: 20px;
   z-index: 999;
   background-color: #e9ecf1;
   width: 100%;
 `;
-
-
-
-export default class Menu extends Component<any, any> {
+interface IProps {
+  data?: any[];
+  default?: number;
+  render: (value: any) => string;
+}
+export default class Menu extends Component<IProps, any> {
+  static defaultProps = {
+    handleInputControl: () => {},
+    data:[]
+  };
   static getDerivedStateFromProps(props, state) {
-    const { itemDefault } = props;
-    const selected = state.selected === null ? itemDefault : state.selected;
-    return {
-      ...state,
-      selected
-    };
+    const { default: defaultID, data } = props;
+
+    if (!state.selected && data.length) {
+      const defaultIndex = data.findIndex(elem => elem.id === defaultID);
+      if (defaultIndex > -1) {
+        const selected = data[defaultIndex];
+        return {
+          selected
+        };
+      }
+    }
+    return null;
   }
 
   public input: HTMLDivElement;
   public state = {
-    selected: null,
+    selected: "",
     show: false
   };
   componentDidMount() {
@@ -58,6 +70,7 @@ export default class Menu extends Component<any, any> {
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleMenu);
   }
+
   handleMenu = e => {
     if (!this.input.contains(e.target)) {
       this.setState({
@@ -65,33 +78,38 @@ export default class Menu extends Component<any, any> {
       });
     }
   };
-  handleChange = selected => {
-    this.setState({
-      selected
-    });
+  handleSelected = (selected, callback = null) => {
+    this.setState(
+      {
+        selected
+      },
+      () => {
+        callback(this.state.selected);
+      }
+    );
   };
   handleRef = input => {
     this.input = input;
   };
-  handleToggle = e => {
-    this.setState(prevState => {
-      return {
-        show: !prevState.show
-      };
-    });
+  handleToggle = () => {
+    this.setState(prevState => ({
+      show: !prevState.show
+    }));
   };
   render() {
     const { show, selected } = this.state;
-    const { itemRender } = this.props;
+    const { render, children } = this.props;
     return (
       <Container onClick={this.handleToggle} ref={this.handleRef}>
-        <SelectedItem>{itemRender(selected)}</SelectedItem>
+        <SelectedItem>{render(selected)}</SelectedItem>
         <Arrow />
         {show ? (
           <MenuWrapper>
-            <Group handleChange={this.handleChange} {...this.props}>
-              {this.props.children}
-            </Group>
+       
+              <Group handleSelected={this.handleSelected} render={render}>
+                {children}
+              </Group>
+      
           </MenuWrapper>
         ) : null}
       </Container>

@@ -8,21 +8,21 @@ import {
   MenuItem,
   Radio,
   Group,
-  FormInput
+  FormControl
 } from "@components";
-import CoreContext, { context } from "../context";
-import { getRequest } from "@actions";
-import { connect } from "react-redux";
+import CoreContext from "../context";
 import { Validators } from "@utils";
+import { connect } from "react-redux";
+import { getRequest } from "@actions";
+import { IFormData } from "@types";
 
-//
 interface IProps {
   categories: any[];
   titles: any[];
-  fetchData: (name: string) => void;
-  handleEventData: (name: string, value: any) => void;
+  getRequest: (name: string) => void;
+  form: Record<string, IFormData>;
 }
-export default class About extends Component<IProps, any> {
+class About extends Component<IProps, any> {
   static contextType = CoreContext;
   public context!: React.ContextType<typeof CoreContext>;
 
@@ -30,8 +30,8 @@ export default class About extends Component<IProps, any> {
     radio: "first"
   };
   componentDidMount() {
-    this.props.fetchData("categories");
-    this.props.fetchData("titles");
+    this.props.getRequest("categories");
+    this.props.getRequest("titles");
   }
   public handleRadioGroup = value => {
     this.setState({
@@ -42,66 +42,111 @@ export default class About extends Component<IProps, any> {
 
   render() {
     const { radio } = this.state;
-    const { categories } = this.props;
+    const { categories, form } = this.props;
+    const { user } = this.context;
+    const { title, description, category_id, reward } = form;
     const inputCss = `width:50px;`;
-    return (
+    return  (
       <Paper header="About">
         <>
-          <FormInput
-            controls={{
-              title: [
+          <FormRow title="title" required message={title.message}>
+            <FormControl
+              name="title"
+              validators={[
                 Validators.dublicates(this.props.titles),
-                Validators.required
-              ]
-            }}
-            render={(inputState, handleInputControl) => {
-              console.log("inputState", inputState);
-              const { message, valid } = inputState["title"];
-              console.log('valid',valid)
-              return (
-                <FormRow title="title" required message={message}>
-                  <Input
-                    name="title"
-                    onChange={handleInputControl}
-                    valid={valid}
-                  />
-                </FormRow>
-              );
-            }}
-          />
-
-          <FormRow title="description" required>
-            <Textarea maxLength={140} rows={4} />
-          </FormRow>
-          <FormRow title="category">
-            <Menu itemRender={item => (item ? `${item.name}` : "")}>
-              {categories.map(item => (
-                <MenuItem
-                  key={item.id}
-                  item={item}
-                  onClick={this.handleSelect}
-                />
-              ))}
-            </Menu>
-          </FormRow>
-          <FormRow title="payment">
-            <Group onChange={this.handleRadioGroup} name="payment">
-              <Radio value="free" text="Free event" />
-              <Radio value="paid" text="Paid event" />
-            </Group>
-            <Input
-              css={`
-                ${inputCss} ${radio === "paid"
-                  ? "visibility:visible"
-                  : "visibility:hidden"}
-              `}
+                Validators.required,
+                Validators.test
+              ]}
+              render={handleInputControl => (
+                <Input onChange={handleInputControl} {...title} />
+              )}
             />
           </FormRow>
-          <FormRow title="reward">
-            <Input />
+          <FormRow title="description" required message={description.message}>
+            <FormControl
+              name="description"
+              validators={[Validators.required]}
+              render={handleInputControl => (
+                <Textarea
+                  onChange={handleInputControl}
+                  rows={4}
+                  maxLength={140}
+                  {...description}
+                />
+              )}
+            />
+          </FormRow>
+
+          <FormRow title="category">
+            <FormControl
+              name="category_id"
+              render={handleInputControl => (
+                <Menu render={elem => (elem ? `${elem.name}` : "")}>
+                  {categories.map(item => (
+                    <MenuItem
+                      key={item.id}
+                      item={item}
+                      onClick={selected => handleInputControl(selected)}
+                    />
+                  ))}
+                </Menu>
+              )}
+            />
+          </FormRow>
+          <FormRow title="payment">
+            <FormControl
+              name="paid_event"
+              render={handleInputControl => (
+                <Group onChange={handleInputControl} name="payment">
+                  <Radio value="free" text="Free event" />
+                  <Radio value="paid" text="Paid event" />
+                </Group>
+              )}
+            />
+            <FormControl
+              name="event_fee"
+              render={handleInputControl => (
+                <Input
+                  onChange={handleInputControl}
+                  css={`
+                    ${inputCss} ${form.paid_event.value === "paid"
+                      ? "visibility:visible"
+                      : "visibility:hidden"}
+                  `}
+                />
+              )}
+            />
+          </FormRow>
+
+          <FormRow title="reward" message={reward.message}>
+            <FormControl
+              name="reward"
+              validators={[Validators.isNumber]}
+              render={handleInputControl => (
+                <Input onChange={handleInputControl} {...reward} />
+              )}
+            />
           </FormRow>
         </>
       </Paper>
     );
   }
 }
+
+const mapStateToProps = state => {
+  const {
+    validatorReducer: { categories, titles },
+    formReducer
+  } = state;
+  return {
+    categories: categories.data,
+    titles: titles.data,
+    form: formReducer
+  };
+};
+export default connect(
+  mapStateToProps,
+  {
+    getRequest
+  }
+)(About);

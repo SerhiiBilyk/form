@@ -7,4 +7,7 @@ export { default as FormRow } from "./FormROw";
 export { default as Header } from "./Header";
 export { default as Input } from "./Input";
 export { default as Paper } from "./Paper";
-export { default as FormInput } from "./FormInput";
+export { default as FormControl } from "./FormControl";
+
+export { default as FlexItem } from "./FlexBox/item";
+export { default as FlexContainer } from "./FlexBox/container";

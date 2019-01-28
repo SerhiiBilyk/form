@@ -13,20 +13,19 @@ const Wrapper = styled.input`
 `;
 
 export default class Input extends Component<any, any> {
-  static defaultProps={
-    valid:true
-  }
+  static defaultProps = {
+    valid: true
+  };
   handleChange = e => {
     const { value } = e.target;
-    const { name } = this.props;
-
-    this.props.onChange(name, value);
+    this.props.onChange(value);
   };
   render() {
-    const { css, name, valid } = this.props;
+    const { css, valid, value,type } = this.props;
     return (
       <Wrapper
-        name={name}
+      type={type}
+        value={value}
         css={css}
         valid={valid}
         onChange={this.handleChange}

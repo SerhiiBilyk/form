@@ -17,35 +17,13 @@ interface IState {
   form: IEvent;
 }
 
-class App extends Component<any, IState> {
+class App extends Component<any, {}> {
   static contextType = CoreContext;
   public context!: React.ContextType<typeof CoreContext>;
-  public state: IState = {
-    form: {
-      title: null,
-      description: null,
-      category_id: null,
-      paid_event: null,
-      event_fee: null,
-      reward: null,
-      date: null,
-      duration: null,
-      coordinator: null
-    }
-  };
+
 
   public handleEventData = (name, value) => {
-    this.setState(prevState => {
-      return {
-        ...prevState,
-        form: {
-          ...prevState.form,
-          [name]: value
-        }
-      };
-    },()=>{
-     // console.log('STATE',this.state)
-    });
+
   };
 
   public fetchData = data => {
@@ -54,21 +32,15 @@ class App extends Component<any, IState> {
 
   public render() {
     const { categories, responsible, titles } = this.props;
+    
 
     return (
       <CoreContext.Provider value={context}>
-        <About
-          categories={categories}
-          titles={titles}
-          fetchData={this.fetchData}
-          handleEventData={this.handleEventData}
-        />
+        <About  />
         <Coordinator
           responsible={responsible}
-          fetchData={this.fetchData}
-          handleEventData={this.handleEventData}
         />
-        <When handleEventData={this.handleEventData} />
+        <When />
       </CoreContext.Provider>
     );
   }

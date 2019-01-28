@@ -7,7 +7,7 @@ interface IFlexBox {
   alignItems?: "stretch" | "flex-start" | "flex-end" | "center" | "baseline";
 }
 
- const FlexBox = styled.div`
+ export const FlexBox = styled.div`
   display: flex;
   flex-direction: ${(props: IFlexBox) => props.direction};
   flex-wrap: ${(props: IFlexBox) => props.wrap};

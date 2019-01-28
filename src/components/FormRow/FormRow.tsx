@@ -30,15 +30,40 @@ const RowInput = styled.div`
   ${media.phone`flex-basis:100%`}
 `;
 const RowMessage = styled.div`
-  ${media.phone`flex-basis:100%`}
+  flex-basis: 20%;
+  color: white;
+  position: relative ${media.phone`flex-basis:100%`};
 `;
 const InputWidth = styled.div`
   width: 100%;
 `;
 
+const ErrorMessage = styled.span`
+  display:${(props: { display: boolean }) => (props.display ? "block" : "none")}
+  background-color: #e58e8e;
+  position: absolute;
+  padding: 4px;
+  left: 10px;
+
+  &::after {
+    content: ".";
+    position: absolute;
+    left: -5px;
+    top: 5px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-right: 5px solid #e58e8e;
+    border-bottom: 5px solid transparent;
+  }
+`;
 export default class FormRow extends Component<any, any> {
+  static defaultProps = {
+    message: []
+  };
   render() {
     const { title, children, required, message } = this.props;
+
     return (
       <Row>
         <RowTitle required={required}>{title.toUpperCase()}</RowTitle>
@@ -46,7 +71,11 @@ export default class FormRow extends Component<any, any> {
           <InputWidth>{children}</InputWidth>
         </RowInput>
         <RowMessage>
-          <VerticalAlign>{message}</VerticalAlign>
+          <ErrorMessage display={message.length}>
+            {message.map((elem, index) => (
+              <span key={index}>{elem}</span>
+            ))}
+          </ErrorMessage>
         </RowMessage>
       </Row>
     );
