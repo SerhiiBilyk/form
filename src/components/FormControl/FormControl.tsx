@@ -23,9 +23,32 @@ class FormControl extends Component<any, any> {
   static contextType = CoreContext;
   public context!: React.ContextType<typeof CoreContext>;
 
+  public shouldComponentUpdate(nextProps) {
+    const { name, form } = nextProps;
+    const prevProps = this.props.form;
+    return true;
+    /*
+    (
+      prevProps[name].value !== form[name].value ||
+      prevProps[name].valid !== form[name].valid
+    );
+    */
+  }
+
+  public componentDidMount() {
+    const { validators, name } = this.props;
+
+    validators.forEach(elem => {
+      if (elem.name === "required") {
+        console.log('name',name)
+        const { message, valid } = this.handleValidation("");
+        this.props.formSetValue(name, { message, valid, value: "" });
+      }
+    });
+  }
+
   public handleValidation = value => {
     const { validators } = this.props;
-
     const validation = validators.reduce(
       (acc, validator) => [...acc, validator(value)],
       []
@@ -49,9 +72,13 @@ class FormControl extends Component<any, any> {
   }
 }
 
-
+const mapStateToProps = state => {
+  return {
+    form: state.formReducer
+  };
+};
 export default connect(
- null,
+  mapStateToProps,
   {
     formSetValue
   }

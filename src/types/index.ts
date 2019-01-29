@@ -36,5 +36,8 @@ export type FormDataKeys =
   | "date"
   | "duration"
   | "coordinator_email"
-  | "coordinator_id";
+  | "coordinator_id"
+  | "time"
+  | "time_meridiem"
+  | "time_duration"
 export type IFormReducer = Record<FormDataKeys, IFormData>;

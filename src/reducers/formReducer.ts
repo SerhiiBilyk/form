@@ -25,7 +25,10 @@ const initialState: IFormReducer = generateState([
   "date",
   "duration",
   "coordinator_email",
-  "coordinator_id"
+  "coordinator_id",
+  "time",
+  "time_meridiem",
+  "time_duration"
 ]);
 const { FORM_SET_VALUE } = Constants;
 

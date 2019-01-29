@@ -13,6 +13,15 @@ import { getRequest } from "@actions";
 import { IFormData } from "@types";
 import { Validators } from "@utils";
 
+const sortBydefault = (data, id) => {
+  if (data.length) {
+    const index = data.findIndex(elem => elem.id === id);
+    const head = data.slice(0, index);
+    const tail = data.slice(index + 1, data.length);
+    return [data[index], ...head, ...tail];
+  }
+  return data;
+};
 interface IProps {
   responsible: any[];
   getRequest: (name: string) => void;
@@ -27,24 +36,22 @@ class Coordinator extends Component<IProps, any> {
     this.props.getRequest("responsible");
   }
 
-  public handleSelect = item => {};
   render() {
     const { responsible, form } = this.props;
-    const { coordinator_email } = form;
+    const { coordinator_email, coordinator_id } = form;
     const { user } = this.context;
-    console.log("responsible", responsible);
     return (
       <Paper header="Coordinator">
-        <FormRow title="responsible" required>
+        <FormRow title="responsible" required message={coordinator_id.message}>
           <FormControl
             name="coordinator_id"
+            validators={[Validators.required]}
             render={handleInputControl => (
               <Menu
-                data={responsible}
-                default={user.id}
+                {...coordinator_id}
                 render={elem => (elem ? `${elem.name} ${elem.lastname}` : "")}
               >
-                {responsible.map(item => (
+                {sortBydefault(responsible, user.id).map(item => (
                   <MenuItem
                     key={item.id}
                     item={item}

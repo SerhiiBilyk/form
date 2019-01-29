@@ -16,15 +16,18 @@ export default class Input extends Component<any, any> {
   static defaultProps = {
     valid: true
   };
+  shouldComponentUpdate({ value, valid }) {
+    return this.props.value !== value || this.props.valid !== valid;
+  }
   handleChange = e => {
     const { value } = e.target;
     this.props.onChange(value);
   };
   render() {
-    const { css, valid, value,type } = this.props;
+    const { css, valid, value, type } = this.props;
     return (
       <Wrapper
-      type={type}
+        type={type}
         value={value}
         css={css}
         valid={valid}

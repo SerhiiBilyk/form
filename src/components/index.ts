@@ -11,3 +11,4 @@ export { default as FormControl } from "./FormControl";
 
 export { default as FlexItem } from "./FlexBox/item";
 export { default as FlexContainer } from "./FlexBox/container";
+export { default as Submit } from "./Submit";

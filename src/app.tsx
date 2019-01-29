@@ -4,6 +4,7 @@ import { getRequest } from "@actions";
 import { connect } from "react-redux";
 import { About, Coordinator, When } from "./containers";
 import { IEvent } from "@types";
+import { Submit } from "@components";
 
 const pick = (src, ...props) =>
   props.reduce(
@@ -21,26 +22,19 @@ class App extends Component<any, {}> {
   static contextType = CoreContext;
   public context!: React.ContextType<typeof CoreContext>;
 
-
-  public handleEventData = (name, value) => {
-
-  };
-
   public fetchData = data => {
     this.props.getRequest(data);
   };
 
   public render() {
     const { categories, responsible, titles } = this.props;
-    
 
     return (
       <CoreContext.Provider value={context}>
-        <About  />
-        <Coordinator
-          responsible={responsible}
-        />
+        <About />
+        <Coordinator />
         <When />
+        <Submit />
       </CoreContext.Provider>
     );
   }

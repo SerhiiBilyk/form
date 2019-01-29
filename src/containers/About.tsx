@@ -41,12 +41,12 @@ class About extends Component<IProps, any> {
   public handleSelect = item => {};
 
   render() {
-    const { radio } = this.state;
     const { categories, form } = this.props;
-    const { user } = this.context;
-    const { title, description, category_id, reward } = form;
+    const { title, description, category_id, reward, event_fee } = form;
     const inputCss = `width:50px;`;
-    return  (
+
+    const feeInput = form.paid_event.value === "paid";
+    return (
       <Paper header="About">
         <>
           <FormRow title="title" required message={title.message}>
@@ -55,7 +55,6 @@ class About extends Component<IProps, any> {
               validators={[
                 Validators.dublicates(this.props.titles),
                 Validators.required,
-                Validators.test
               ]}
               render={handleInputControl => (
                 <Input onChange={handleInputControl} {...title} />
@@ -105,16 +104,18 @@ class About extends Component<IProps, any> {
             />
             <FormControl
               name="event_fee"
-              render={handleInputControl => (
-                <Input
-                  onChange={handleInputControl}
-                  css={`
-                    ${inputCss} ${form.paid_event.value === "paid"
-                      ? "visibility:visible"
-                      : "visibility:hidden"}
-                  `}
-                />
-              )}
+              render={handleInputControl =>
+                feeInput ? (
+                  <Input
+                    onChange={handleInputControl}
+                    css={`
+                      ${inputCss} border:none;
+                      outline: 1px solid black;
+                    `}
+                    {...event_fee}
+                  />
+                ) : null
+              }
             />
           </FormRow>
 

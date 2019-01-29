@@ -3,8 +3,7 @@ import styled from "styled-components";
 import { media, inputs } from "../../styles/utils";
 
 const Wrapper = styled.textarea`
-  outline: ${(props: { valid: boolean }) =>
-    props.valid === true ? "none" : "1px solid red"}
+  outline: ${(props: { valid: boolean }) =>props.valid === true ? "none" : "1px solid red"}
   ${inputs}
   resize:none;
   ${media.phone`width:100%`}
@@ -20,29 +19,38 @@ font-size:13px;
 interface IProps {
   valid: boolean;
   onChange: (value: any) => void;
-  rows:number;
-  maxLength:number;
-  value:any;
+  rows: number;
+  maxLength: number;
+  value: any;
 }
 export default class TextArea extends Component<IProps, any> {
-  public state = {
-    length: 0
-  };
+
+
+  shouldComponentUpdate(nextProps) {
+    return (
+      this.props.value !== nextProps.value ||
+      this.props.valid !== nextProps.valid
+    );
+  }
+
   handleChange = e => {
     const { value } = e.target;
-
-    this.setState({ length: value.length }, () => this.props.onChange(value));
+    this.props.onChange(value)
   };
   render() {
-    const { length } = this.state;
-    const { valid } = this.props;
+    const { valid, value, rows } = this.props;
 
     return (
       <>
-        <Wrapper onChange={this.handleChange} {...this.props} />
+        <Wrapper
+          onChange={this.handleChange}
+          value={value}
+          valid={valid}
+          rows={rows}
+        />
         <p>
           <TextBlock align="left">Max length: 140 chars</TextBlock>
-          <TextBlock align="right">0/{140 - length}</TextBlock>
+          <TextBlock align="right">0/{140 - value.length}</TextBlock>
         </p>
       </>
     );

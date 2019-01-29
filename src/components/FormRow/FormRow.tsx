@@ -7,7 +7,7 @@ const Row = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
-  ${media.phone`flex-direction:column; align-items:stretch`}
+  ${media.phone`flex-direction:column; align-items:stretch;margin:20px 0`}
 `;
 const RowTitle = styled.div`
   flex-basis: 30%;

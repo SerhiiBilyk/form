@@ -14,9 +14,7 @@ export default class MenuItem extends Component<any, any> {
     this.props.handleSelected(elem, this.props.onClick);
   };
   render() {
-    const { item,render } = this.props;
-    return (
-      <Item onClick={this.handleClick(item)}>{render(item)}</Item>
-    );
+    const { item, render } = this.props;
+    return <Item onClick={this.handleClick(item)}>{render(item)}</Item>;
   }
 }

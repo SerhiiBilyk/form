@@ -4,6 +4,8 @@ import { media } from "../../styles/utils";
 import Group from "../Group";
 const Container = styled.div`
   position: relative;
+  outline: ${(props: IProps) =>
+    props.valid === true ? "none" : "1px solid red"}
 `;
 
 const Arrow = styled.div`
@@ -37,25 +39,17 @@ const MenuWrapper = styled.ul`
 interface IProps {
   data?: any[];
   default?: number;
-  render: (value: any) => string;
+  render?: (value: any) => string;
+  valid?:boolean
 }
 export default class Menu extends Component<IProps, any> {
   static defaultProps = {
     handleInputControl: () => {},
-    data:[]
+    data: [],
+    valid:true
   };
   static getDerivedStateFromProps(props, state) {
-    const { default: defaultID, data } = props;
-
-    if (!state.selected && data.length) {
-      const defaultIndex = data.findIndex(elem => elem.id === defaultID);
-      if (defaultIndex > -1) {
-        const selected = data[defaultIndex];
-        return {
-          selected
-        };
-      }
-    }
+  
     return null;
   }
 
@@ -65,6 +59,7 @@ export default class Menu extends Component<IProps, any> {
     show: false
   };
   componentDidMount() {
+    console.log('selected',this.state)
     document.addEventListener("mousedown", this.handleMenu);
   }
   componentWillUnmount() {
@@ -92,24 +87,23 @@ export default class Menu extends Component<IProps, any> {
     this.input = input;
   };
   handleToggle = () => {
+    console.log('toggle',this.state)
     this.setState(prevState => ({
       show: !prevState.show
     }));
   };
   render() {
     const { show, selected } = this.state;
-    const { render, children } = this.props;
+    const { render, children, valid } = this.props;
     return (
-      <Container onClick={this.handleToggle} ref={this.handleRef}>
+      <Container onClick={this.handleToggle} ref={this.handleRef} valid={valid}>
         <SelectedItem>{render(selected)}</SelectedItem>
         <Arrow />
         {show ? (
           <MenuWrapper>
-       
-              <Group handleSelected={this.handleSelected} render={render}>
-                {children}
-              </Group>
-      
+            <Group handleSelected={this.handleSelected} render={render}>
+              {children}
+            </Group>
           </MenuWrapper>
         ) : null}
       </Container>
